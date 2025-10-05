@@ -12,7 +12,7 @@ export class UserDomainService {
 
   // Regra de negócio: verificar se usuário pode ser ativado
   static canActivateUser(user: User): boolean {
-    return user.email && user.name && user.id > 0;
+    return !!user.email && !!user.name && user.id > 0;
   }
 
   // Regra de negócio: verificar se usuário é de domínio corporativo

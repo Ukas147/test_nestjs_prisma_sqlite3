@@ -9,7 +9,7 @@ export class UserName {
   }
 
   private isValid(name: string): boolean {
-    return name && name.trim().length >= 2;
+    return !!name && name.trim().length >= 2;
   }
 
   getValue(): string {

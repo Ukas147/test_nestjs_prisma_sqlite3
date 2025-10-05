@@ -9,15 +9,18 @@ import {
   ParseIntPipe,
   HttpException,
   HttpStatus,
+  Inject,
 } from '@nestjs/common';
 import { CreateUserDto } from '../../application/dto/create-user.dto';
 import { UpdateUserDto } from '../../application/dto/update-user.dto';
-import { UserServiceInterface } from '../../application/interfaces/user.service.interface';
+import type { UserServiceInterface } from '../../application/interfaces/user.service.interface';
 import { UserAdapter } from '../../application/adapters/user.adapter';
+import { USER_SERVICE_TOKEN } from '../../application/interfaces/user.service.token';
 
 @Controller('users')
 export class UserController {
   constructor(
+    @Inject(USER_SERVICE_TOKEN)
     private readonly userService: UserServiceInterface,
   ) {}
 

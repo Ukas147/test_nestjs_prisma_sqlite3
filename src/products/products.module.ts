@@ -2,21 +2,25 @@ import { Module } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ProductController } from './presentation/controllers/product.controller';
 import { PrismaProductRepository } from './infrastructure/repositories/prisma-product.repository';
-import { CreateProductUseCase } from './application/use-cases/create-product.use-case';
-import { GetAllProductsUseCase } from './application/use-cases/get-all-products.use-case';
-import { ProductRepository } from './domain/repositories/product.repository.interface';
+import { ProductApplicationService } from './application/services/product.application.service';
+import { PRODUCT_REPOSITORY_TOKEN } from './domain/repositories/product.repository.token';
+import { PRODUCT_SERVICE_TOKEN } from './application/interfaces/product.service.token';
 
 @Module({
   controllers: [ProductController],
   providers: [
     PrismaService,
     {
-      provide: ProductRepository,
+      provide: PRODUCT_REPOSITORY_TOKEN,
       useClass: PrismaProductRepository,
     },
-    CreateProductUseCase,
-    GetAllProductsUseCase,
+    {
+      provide: PRODUCT_SERVICE_TOKEN,
+      useClass: ProductApplicationService,
+    },
   ],
-  exports: [ProductRepository],
+  exports: [PRODUCT_REPOSITORY_TOKEN, PRODUCT_SERVICE_TOKEN],
 })
 export class ProductsModule {}
+
+

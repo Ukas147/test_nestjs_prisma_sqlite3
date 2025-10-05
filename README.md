@@ -1,98 +1,417 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# API NestJS
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API REST desenvolvida com NestJS, Prisma e SQLite seguindo princípios de Clean Architecture.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Tecnologias
 
-## Description
+- **NestJS** 11.x - Framework Node.js
+- **Prisma** 6.x - ORM
+- **SQLite** - Banco de dados
+- **TypeScript** 5.x
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
+## 📦 Instalação
 
 ```bash
-$ npm install
+# Instalar dependências
+npm install
+
+# Sincronizar banco de dados
+npx prisma db push
+
+# Gerar Prisma Client
+npx prisma generate
 ```
 
-## Compile and run the project
+## 🏃 Executar
 
 ```bash
-# development
-$ npm run start
+# Desenvolvimento
+npm run start:dev
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+# Produção
+npm run build
+npm run start:prod
 ```
 
-## Run tests
+**Porta padrão:** 5400
+
+## 📚 Arquitetura
+
+Projeto organizado em camadas seguindo Clean Architecture:
+
+```
+src/
+├── [módulo]/
+│   ├── domain/           # Entidades e interfaces
+│   ├── application/      # Casos de uso e DTOs
+│   ├── infrastructure/   # Implementações (Prisma)
+│   └── presentation/     # Controllers (REST)
+```
+
+---
+
+## 👤 Módulo Users
+
+### Entidade User
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `id` | number | ID único |
+| `email` | string | Email único |
+| `name` | string | Nome completo |
+| `createdAt` | Date | Data de criação |
+| `updatedAt` | Date | Data de atualização |
+
+**Métodos:**
+- `getDisplayName()` - Retorna nome formatado
+- `getInitials()` - Retorna iniciais
+- `getEmailDomain()` - Retorna domínio do email
+
+### Rotas Users
+
+#### `POST /users`
+Criar novo usuário.
+
+**Body:**
+```json
+{
+  "email": "user@example.com",
+  "name": "João Silva"
+}
+```
+
+**Response:** `201`
+```json
+{
+  "id": 1,
+  "email": "user@example.com",
+  "name": "João Silva",
+  "displayName": "João Silva",
+  "initials": "JS",
+  "emailDomain": "example.com",
+  "createdAt": "2025-10-05T10:00:00.000Z",
+  "updatedAt": "2025-10-05T10:00:00.000Z"
+}
+```
+
+**Erros:**
+- `400` - Email já está em uso
+
+---
+
+#### `GET /users`
+Listar todos os usuários.
+
+**Response:** `200`
+```json
+[
+  {
+    "id": 1,
+    "email": "user@example.com",
+    "name": "João Silva",
+    "displayName": "João Silva",
+    "initials": "JS",
+    "emailDomain": "example.com",
+    "createdAt": "2025-10-05T10:00:00.000Z",
+    "updatedAt": "2025-10-05T10:00:00.000Z"
+  }
+]
+```
+
+---
+
+#### `GET /users/:id`
+Buscar usuário por ID.
+
+**Response:** `200`
+```json
+{
+  "id": 1,
+  "email": "user@example.com",
+  "name": "João Silva",
+  "displayName": "João Silva",
+  "initials": "JS",
+  "emailDomain": "example.com",
+  "createdAt": "2025-10-05T10:00:00.000Z",
+  "updatedAt": "2025-10-05T10:00:00.000Z"
+}
+```
+
+**Erros:**
+- `404` - Usuário não encontrado
+
+---
+
+#### `PUT /users/:id`
+Atualizar usuário.
+
+**Body:**
+```json
+{
+  "email": "newemail@example.com",
+  "name": "João da Silva"
+}
+```
+
+**Response:** `200`
+```json
+{
+  "id": 1,
+  "email": "newemail@example.com",
+  "name": "João da Silva",
+  "displayName": "João da Silva",
+  "initials": "JS",
+  "emailDomain": "example.com",
+  "createdAt": "2025-10-05T10:00:00.000Z",
+  "updatedAt": "2025-10-05T10:00:00.000Z"
+}
+```
+
+**Erros:**
+- `400` - Email já está em uso
+- `404` - Usuário não encontrado
+
+---
+
+#### `DELETE /users/:id`
+Deletar usuário.
+
+**Response:** `200`
+```json
+{
+  "message": "Usuário deletado com sucesso"
+}
+```
+
+**Erros:**
+- `404` - Usuário não encontrado
+
+---
+
+## 📦 Módulo Products
+
+### Entidade Product
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `id` | number | ID único |
+| `name` | string | Nome do produto (min: 2 chars) |
+| `price` | number | Preço (> 0) |
+| `description` | string | Descrição |
+| `createdAt` | Date | Data de criação |
+| `updatedAt` | Date | Data de atualização |
+
+**Métodos:**
+- `getFormattedPrice()` - Retorna preço formatado (R$ XX.XX)
+
+### Rotas Products
+
+#### `POST /products`
+Criar novo produto.
+
+**Body:**
+```json
+{
+  "name": "Notebook",
+  "price": 2500.00,
+  "description": "Notebook Dell Inspiron 15"
+}
+```
+
+**Response:** `201`
+```json
+{
+  "id": 1,
+  "name": "Notebook",
+  "price": 2500.00,
+  "description": "Notebook Dell Inspiron 15",
+  "formattedPrice": "R$ 2500.00",
+  "createdAt": "2025-10-05T10:00:00.000Z",
+  "updatedAt": "2025-10-05T10:00:00.000Z"
+}
+```
+
+**Erros:**
+- `400` - Nome deve ter pelo menos 2 caracteres
+- `400` - Preço deve ser maior que zero
+
+---
+
+#### `GET /products`
+Listar todos os produtos.
+
+**Response:** `200`
+```json
+[
+  {
+    "id": 1,
+    "name": "Notebook",
+    "price": 2500.00,
+    "description": "Notebook Dell Inspiron 15",
+    "formattedPrice": "R$ 2500.00",
+    "createdAt": "2025-10-05T10:00:00.000Z",
+    "updatedAt": "2025-10-05T10:00:00.000Z"
+  }
+]
+```
+
+---
+
+#### `GET /products/:id`
+Buscar produto por ID.
+
+**Response:** `200`
+```json
+{
+  "id": 1,
+  "name": "Notebook",
+  "price": 2500.00,
+  "description": "Notebook Dell Inspiron 15",
+  "formattedPrice": "R$ 2500.00",
+  "createdAt": "2025-10-05T10:00:00.000Z",
+  "updatedAt": "2025-10-05T10:00:00.000Z"
+}
+```
+
+**Erros:**
+- `404` - Produto não encontrado
+
+---
+
+#### `PUT /products/:id`
+Atualizar produto.
+
+**Body:**
+```json
+{
+  "name": "Notebook Atualizado",
+  "price": 2300.00,
+  "description": "Notebook Dell Inspiron 15 - Atualizado"
+}
+```
+
+**Response:** `200`
+```json
+{
+  "id": 1,
+  "name": "Notebook Atualizado",
+  "price": 2300.00,
+  "description": "Notebook Dell Inspiron 15 - Atualizado",
+  "formattedPrice": "R$ 2300.00",
+  "createdAt": "2025-10-05T10:00:00.000Z",
+  "updatedAt": "2025-10-05T10:05:00.000Z"
+}
+```
+
+**Erros:**
+- `400` - Dados inválidos
+- `404` - Produto não encontrado
+
+---
+
+#### `DELETE /products/:id`
+Deletar produto.
+
+**Response:** `200`
+```json
+{
+  "message": "Produto deletado com sucesso"
+}
+```
+
+**Erros:**
+- `404` - Produto não encontrado
+
+---
+
+## 🗄️ Banco de Dados
+
+**Tipo:** SQLite  
+**Arquivo:** `prisma/dev.db`
+
+### Schema
+
+```prisma
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("users")
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  price       Float
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@map("products")
+}
+```
+
+### Comandos Prisma
 
 ```bash
-# unit tests
-$ npm run test
+# Sincronizar schema
+npx prisma db push
 
-# e2e tests
-$ npm run test:e2e
+# Visualizar dados
+npx prisma studio
 
-# test coverage
-$ npm run test:cov
+# Gerar client
+npx prisma generate
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## 🧪 Testes
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Testes unitários
+npm run test
+
+# Testes e2e
+npm run test:e2e
+
+# Cobertura
+npm run test:cov
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## 📝 Scripts
 
-Check out a few resources that may come in handy when working with NestJS:
+| Script | Descrição |
+|--------|-----------|
+| `npm run start:dev` | Inicia em modo desenvolvimento |
+| `npm run build` | Compila o projeto |
+| `npm run start:prod` | Inicia em produção |
+| `npm run lint` | Executa ESLint |
+| `npm run format` | Formata código com Prettier |
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+---
 
-## Support
+## 🔗 Endpoints Resumo
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `GET` | `/` | Health check |
+| `POST` | `/users` | Criar usuário |
+| `GET` | `/users` | Listar usuários |
+| `GET` | `/users/:id` | Buscar usuário |
+| `PUT` | `/users/:id` | Atualizar usuário |
+| `DELETE` | `/users/:id` | Deletar usuário |
+| `POST` | `/products` | Criar produto |
+| `GET` | `/products` | Listar produtos |
+| `GET` | `/products/:id` | Buscar produto |
+| `PUT` | `/products/:id` | Atualizar produto |
+| `DELETE` | `/products/:id` | Deletar produto |
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## 📄 Licença
 
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+UNLICENSED

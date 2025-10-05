@@ -1,14 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { User } from '../../domain/entities/user.entity';
-import { UserRepositoryInterface } from '../../domain/interfaces/user.domain.interface';
+import type { UserRepositoryInterface } from '../../domain/interfaces/user.domain.interface';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { UserServiceInterface } from '../interfaces/user.service.interface';
 import { UserAdapter } from '../adapters/user.adapter';
+import { USER_REPOSITORY_TOKEN } from '../../domain/repositories/user.repository.token';
 
 @Injectable()
 export class UserApplicationService implements UserServiceInterface {
-  constructor(private readonly userRepository: UserRepositoryInterface) {}
+  constructor(
+    @Inject(USER_REPOSITORY_TOKEN)
+    private readonly userRepository: UserRepositoryInterface,
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     // Verificar se email já existe
